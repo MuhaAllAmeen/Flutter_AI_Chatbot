@@ -47,3 +47,4 @@ class ChatPartModel {
 
   factory ChatPartModel.fromJson(String source) => ChatPartModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
+
