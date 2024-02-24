@@ -1,4 +1,4 @@
-# recipe_ai
+# Recipe.AI
 
 This project is both a chat bot and image recognition bot with just a swipe.
 This flutter app integrates the latest Gemini API to fetch data from the AI and display the response to the user in the best manner possible.
