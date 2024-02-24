@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe_ai/bloc/image_ai_bloc.dart';
 import 'package:recipe_ai/utils/helpers/loading.dart';
 import 'package:recipe_ai/utils/services/image_picker.dart';
+import 'package:recipe_ai/views/image_view.dart';
 
 class ImageAI extends StatefulWidget {
   const ImageAI({super.key});
@@ -72,102 +73,105 @@ class _ImageAIState extends State<ImageAI> {
           }
         },
         builder: (context, state) {
-              return Container(
-                height: double.maxFinite,
-                width: double.maxFinite,
-                decoration: BoxDecoration(color: Colors.pink[50]),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      height: 100,
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Recipe.AI',
-                                style: TextStyle(
-                                fontSize: 30,color: Colors.pinkAccent, fontWeight: FontWeight.bold,fontFamily: 'ProtestRiot'),
-                              ),
-                              Text('ImageBot',style: TextStyle(fontSize: 17,color: Colors.pink),)
-                            ],
-                          ),
-                          Icon(Icons.food_bank_outlined,color: Colors.pink, size: 50,)
-                        ],
-                      ),
-                    ),
-                    if (imageFile!=null)
-                      Expanded(
-                        child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
-                        alignment: Alignment.center,
-                        height: 250,
-                        child: Image.file(imageFile!),
-                                            ),
-                      ), 
-                      // },
-                    // ),
-                    if (generatedText!=null)
+              return SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height, 
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: Colors.pink[50]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
-                        child: Text(generatedText!,style: const TextStyle(fontSize: 20),),
-                      ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 5.0,
+                        color: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        height: 100,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Recipe.AI',
+                                  style: TextStyle(
+                                  fontSize: 30,color: Colors.pinkAccent, fontWeight: FontWeight.bold,fontFamily: 'ProtestRiot'),
+                                ),
+                                Text('ImageBot',style: TextStyle(fontSize: 17,color: Colors.pink),)
+                              ],
                             ),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: TextField(
-                          controller: textEditingController,
-                          maxLines: null,
+                            Icon(Icons.food_bank_outlined,color: Colors.pink, size: 50,)
+                          ],
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 12),
-                      height: 100,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                              onPressed: () {
-                                imageAiBloc.add(GenerateTextFromImage(
-                                    inputMessage: textEditingController.text,
-                                    imageFile: imageFile));
-                              },
-                              child: const Text('Generate',style: TextStyle(fontSize: 25,color: Colors.pink),)),
-                          Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () async {
-                                    imageAiBloc.add(UploadImageEvent(
-                                        galleryOrCamera: GalleryOrCamera.gallery));
-                                  },
-                                  icon: const Icon(Icons.add,color: Colors.pink,)
+                      if (imageFile!=null)
+                        InkWell(
+                          onTap:() {
+                            Navigator.of(context).push(MaterialPageRoute(builder:(context) => ImageView(imageFile: imageFile),));
+                          },
+                          child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                          alignment: Alignment.center,
+                          height: 250,
+                          child: Image.file(imageFile!),
+                          ),
+                        ), 
+                      if (generatedText!=null)
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
+                          child: Text(generatedText!,style: const TextStyle(fontSize: 20),),
+                        ),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 5.0,
                               ),
-                              IconButton(
-                              onPressed: () async {
-                                imageAiBloc.add(UploadImageEvent(
-                                    galleryOrCamera: GalleryOrCamera.camera));
-                              },
-                              icon: const Icon(Icons.camera_alt_outlined,color: Colors.pink,))
-                            ],
-                          ),                         
-                        ],
+                              borderRadius: BorderRadius.circular(20)),
+                          child: TextField(
+                            controller: textEditingController,
+                            maxLines: null,
+                          ),
+                        ),
                       ),
-                    )
-                  ],
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                        height: 100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  imageAiBloc.add(GenerateTextFromImage(
+                                      inputMessage: textEditingController.text,
+                                      imageFile: imageFile));
+                                },
+                                child: const Text('Generate',style: TextStyle(fontSize: 25,color: Colors.pink),)),
+                            Row(
+                              children: [
+                                IconButton(
+                                    onPressed: () async {
+                                      imageAiBloc.add(UploadImageEvent(
+                                          galleryOrCamera: GalleryOrCamera.gallery));
+                                    },
+                                    icon: const Icon(Icons.add,color: Colors.pink,)
+                                ),
+                                IconButton(
+                                onPressed: () async {
+                                  imageAiBloc.add(UploadImageEvent(
+                                      galleryOrCamera: GalleryOrCamera.camera));
+                                },
+                                icon: const Icon(Icons.camera_alt_outlined,color: Colors.pink,))
+                              ],
+                            ),                         
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
         },
